@@ -7,6 +7,7 @@
 
 
 FOLDER_NOTEBOOKS="$HOME/Documents/Notebooks/*"
+FOLDER_NOTEBOOKS2="$HOME/Documents/Notebooks"
 INDEX_FILE="$HOME/Documents/Notebooks/N-Indexes.tex"
 files=("$FOLDER_NOTEBOOKS"*) # Get list of all notebooks in the folder
 CONFIG_QUIET=1 # Quiet mode by default. Pass "-v" for verbose
@@ -50,6 +51,8 @@ if [ ! -f "$FILE_FZFNAMES" ] ; then
 	echo "         since $FZF_FILENAMES does not exist"
 fi
 
+# TODO: Reduce the loops below to this line:
+# find . -name "N*-P*.jpg" -type f | sort
 
 if [ $CONFIG_SCAN -eq 1 ] ; then
 	iFile=$(cat "$INDEX_FILE") # Read the LaTeX index file contents
@@ -91,8 +94,24 @@ if [ $CONFIG_QUIET -eq 0 ] ; then
 	cat "$FILE_FZFNAMES"
 fi
 
-cat "$FILE_FZFNAMES" | fzf --tac --prompt="$FZF_PROMPT" # Feed lines to fzf
+# cat "$FILE_FZFNAMES" | fzf --tac --prompt="$FZF_PROMPT" # Feed lines to fzf
+
+# Feed lines to fzf
+PAGE_CHOICE=$(cat "$FILE_FZFNAMES" | fzf --tac --prompt="$FZF_PROMPT" | cut -d " " -f1)
 # --tac		--> Reverse the order of the output
 # --prompt	--> Change the prompt line while in fzf
+
+# echo "Page choice: $PAGE_CHOICE"
+
+FILE_LOCATION=$(find "$FOLDER_NOTEBOOKS2" -name "$PAGE_CHOICE.jpg")
+echo "$FILE_LOCATION"
+
+if [[ $OSTYPE == "darwin"* ]] ; then
+	echo "Using macOS"
+	open "$FILE_LOCATION"
+elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
+	# NOTE: At the moment, Linux applications open the images into Okular
+	okular "$FILE_LOCATION" & > /dev/null
+fi
 
 exit 0
