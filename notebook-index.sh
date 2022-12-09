@@ -14,9 +14,10 @@ FZF_PROMPT="Notebook Search: "
 STR_SEP="|"
 STR_EMPTY="=== NO ENTRY ===" # If notebook page has no index entry
 ERR_NOPAGE="No page selected!"
+RUN_FZF=1 # True by default, use -n for not running fzf
 
 # Checking for command arguments
-while getopts "ehsv" opt; do
+while getopts ":ehnsv:" opt; do
 	case $opt in
 		e)
 			$EDITOR "$INDEX_FILE" # Edit the index file
@@ -42,6 +43,10 @@ while getopts "ehsv" opt; do
 			echo "See https://github.com/hussein-esmail7/notebook-index"
 			echo "for more info"
 			exit 1
+			;;
+		n)  # Do not run fzf. Useful if you just want to scan
+			RUN_FZF=0
+			shift
 			;;
 		s)
 			CONFIG_SCAN=1 # Rescan files before showing the fzf menu
@@ -115,40 +120,43 @@ if [ $CONFIG_QUIET -eq 0 ] ; then
 	cat "$FILE_FZFNAMES"
 fi
 
+
 # Feed lines to fzf
-if [ "${#args}" -eq 0 ] ; then
-	# If the user did not provide an initial query
-	PAGE_CHOICE=$(cat "$FILE_FZFNAMES" | fzf --tac --prompt="$FZF_PROMPT" | cut -d " " -f1)
-else
-	# If the user gave an initial query in the command line
-	PAGE_CHOICE=$(cat "$FILE_FZFNAMES" | fzf --tac --prompt="$FZF_PROMPT" --query "$args" | cut -d " " -f1)
-fi
-# --tac		--> Reverse the order of the output
-# --prompt	--> Change the prompt line while in fzf
+if [ $RUN_FZF -eq 1 ] ; then
+	if [ "${#args}" -eq 0 ] ; then
+		# If the user did not provide an initial query
+		PAGE_CHOICE=$(cat "$FILE_FZFNAMES" | fzf --tac --prompt="$FZF_PROMPT" | cut -d " " -f1)
+	else
+		# If the user gave an initial query in the command line
+		PAGE_CHOICE=$(cat "$FILE_FZFNAMES" | fzf --tac --prompt="$FZF_PROMPT" --query "$args" | cut -d " " -f1)
+	fi
+	# --tac		--> Reverse the order of the output
+	# --prompt	--> Change the prompt line while in fzf
 
-if [ "${#PAGE_CHOICE}" -eq 0 ] ; then
-	echo "$ERR_NOPAGE"
-	exit 1
-fi
+	if [ "${#PAGE_CHOICE}" -eq 0 ] ; then
+		echo "$ERR_NOPAGE"
+		exit 1
+	fi
 
-FILE_LOCATION=$(find "$FOLDER_NOTEBOOKS" -name "$PAGE_CHOICE*")
-# Explanation for "$PAGE_CHOICE*" part:
-#   At first, I had "$PAGE_CHOICE.jpg", but this does not find the pages that
-#   may have " - rescan" in the file name. "$PAGE_CHOICE" does not return
-#   anything because it thinks that's the whole file name, so I need the
-#   wildcard
+	FILE_LOCATION=$(find "$FOLDER_NOTEBOOKS" -name "$PAGE_CHOICE*")
+	# Explanation for "$PAGE_CHOICE*" part:
+	#   At first, I had "$PAGE_CHOICE.jpg", but this does not find the pages that
+	#   may have " - rescan" in the file name. "$PAGE_CHOICE" does not return
+	#   anything because it thinks that's the whole file name, so I need the
+	#   wildcard
 
-if [ $CONFIG_QUIET -eq 0 ] ; then
-	# Print the fill path of the chosen file
-	echo "Location: $FILE_LOCATION"
-fi
+	if [ $CONFIG_QUIET -eq 0 ] ; then
+		# Print the fill path of the chosen file
+		echo "Location: $FILE_LOCATION"
+	fi
 
-if [[ $OSTYPE == "darwin"* ]] ; then
-	# User is using a macOS machine
-	open "$FILE_LOCATION"
-elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
-	# NOTE: At the moment, Linux applications open the images into Okular
-	okular "$FILE_LOCATION" & > /dev/null
+	if [[ $OSTYPE == "darwin"* ]] ; then
+		# User is using a macOS machine
+		open "$FILE_LOCATION"
+	elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
+		# NOTE: At the moment, Linux applications open the images into Okular
+		okular "$FILE_LOCATION" & > /dev/null
+	fi
 fi
 
 exit 0
