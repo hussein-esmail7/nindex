@@ -5,6 +5,8 @@
 # Description: This program will use fzf to open my notebook pages quickly
 #   Allows search by notebook number and page, or by index entry name.
 
+# TODO: Add an `-m` option that prints a list of pages that match a query, and include the title of each page in that query. Essentially a grep of the cache
+
 FOLDER_NOTEBOOKS="$HOME/Documents/Notebooks"
 INDEX_FILE="$HOME/Documents/Notebooks/N-Indexes.tex"
 CONFIG_QUIET=1 # Quiet mode by default. Pass "-v" for verbose
