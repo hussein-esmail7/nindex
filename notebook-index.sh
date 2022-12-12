@@ -129,11 +129,20 @@ if [ $RUN_FZF -eq 1 ] ; then
 		# If the user did not provide an initial query
 		PAGE_CHOICE=$(cat "$FILE_FZFNAMES" | fzf --tac --prompt="$FZF_PROMPT" | cut -d " " -f1)
 	else
-		# If the user gave an initial query in the command line
-		PAGE_CHOICE=$(cat "$FILE_FZFNAMES" | fzf --tac --prompt="$FZF_PROMPT" --query "$args" | cut -d " " -f1)
+		if [[ "$args" =~ (n|N)[0-9]{2}(-| )(p|P)[0-9]{3}$ ]] ; then
+			# If the user gave the notebook and page number they want
+			# Match formatting if in case it is not exact
+			PAGE_CHOICE=$(echo "${args// /-}" | tr '[:lower:]' '[:upper:]')
+			# "// /-": Replace spaces with "-"
+			# tr: Make all letters in variable uppercase
+		else
+			# If the user gave an uncertain initial query
+			PAGE_CHOICE=$(cat "$FILE_FZFNAMES" | fzf --tac --prompt="$FZF_PROMPT" --query "$args" | cut -d " " -f1)
+		fi
 	fi
-	# --tac		--> Reverse the order of the output
-	# --prompt	--> Change the prompt line while in fzf
+	# FZF argument explanations:
+	# --tac		--> Reverse the order of the output: Best match is at bottom
+	# --prompt	--> Change the prompt line while in fzf: Configurable by user
 
 	if [ "${#PAGE_CHOICE}" -eq 0 ] ; then
 		echo "$ERR_NOPAGE"
