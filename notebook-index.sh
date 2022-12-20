@@ -17,9 +17,10 @@ STR_SEP="|"
 STR_EMPTY="=== NO ENTRY ===" # If notebook page has no index entry
 ERR_NOPAGE="No page selected!"
 RUN_FZF=1 # True by default, use -n for not running fzf
+PRINT_RECENT=0 # True if using -r. Exits program if true
 
 # Checking for command arguments
-while getopts ":ehnsv:" opt; do
+while getopts ":ehnrsv:" opt; do
 	case $opt in
 		e)
 			$EDITOR "$INDEX_FILE" # Edit the index file
@@ -39,6 +40,7 @@ while getopts ":ehnsv:" opt; do
 			echo "    Current file path:"
 			echo "    '$INDEX_FILE'"
 			echo "-h: Prints this help message, then exit program."
+			echo "-r: Print the most recent page entry, then exit program"
 			echo "-s: Rescan index file before searching in fzf"
 			echo "-v: Verbose mode. Program is quiet by default."
 			echo ""
@@ -48,6 +50,10 @@ while getopts ":ehnsv:" opt; do
 			;;
 		n)  # Do not run fzf. Useful if you just want to scan
 			RUN_FZF=0
+			shift
+			;;
+		r)	# Print the most recent page entry, then exit program
+			PRINT_RECENT=1
 			shift
 			;;
 		s)
@@ -79,6 +85,7 @@ fi
 # find . -name "N*-P*.jpg" -type f -execdir basename '{}' ';' | sort
 
 if [ $CONFIG_SCAN -eq 1 ] ; then
+	# If '-s' option is passed or index file does not exist
 	if [ $CONFIG_QUIET -eq 0 ] ; then
 		echo "Scanning..."
 	fi
@@ -118,7 +125,16 @@ if [ $CONFIG_SCAN -eq 1 ] ; then
 	fi
 fi
 
+if [ $PRINT_RECENT -eq 1 ] ; then
+	# Print the most recent page entries, then exit program
+	# At the moment, print the 5 most recent pages because the most recent page
+	# may be page 200 (Index 3/3) but you may be missing pages 100-197
+	cat "$FILE_FZFNAMES" | tail -5
+	exit 0 # Exit the program
+fi
+
 if [ $CONFIG_QUIET -eq 0 ] ; then
+	# Print the whole list of text that will be passed to fzf
 	cat "$FILE_FZFNAMES"
 fi
 
