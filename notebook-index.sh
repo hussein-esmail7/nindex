@@ -177,6 +177,12 @@ if [ $RUN_FZF -eq 1 ] ; then
 		echo "Location: $FILE_LOCATION"
 	fi
 
+	if [ -z "$FILE_LOCATION" ] ; then
+		# If the file does not exist, exit the program and return an error
+		echo "$PAGE_CHOICE does not exist!"
+		exit 1
+	fi
+
 	if [[ $OSTYPE == "darwin"* ]] ; then
 		# User is using a macOS machine
 		open "$FILE_LOCATION"
