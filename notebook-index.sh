@@ -5,7 +5,12 @@
 # Description: This program will use fzf to open my notebook pages quickly
 #   Allows search by notebook number and page, or by index entry name.
 
-# TODO: Add an `-m` option that prints a list of pages that match a query, and include the title of each page in that query. Essentially a grep of the cache
+# TODO: Add an `-m` option that prints a list of pages that match a query, and
+# include the title of each page in that query. Essentially a grep of the cache
+# TODO: Add the option to just type "ni 102" and automatically opens the most
+# recent P102 (ex. if N10 is the most recent, open that. If 102 doesn't exist
+# for N10, open N109-P102, etc.)
+# TODO: Move cache file somewhere else
 
 FOLDER_NOTEBOOKS="$HOME/Documents/Notebooks"
 INDEX_FILE="$HOME/Documents/Notebooks/N-Indexes.tex"
@@ -116,6 +121,7 @@ if [ $CONFIG_SCAN -eq 1 ] ; then
 		if [ "${#pTitle}" -eq 0 ] ; then
 			# If there is no entry for this page, set to $STR_EMPTY
 			pTitle="$STR_EMPTY"
+			echo "$pageNum is EMPTY!"
 		fi
 		final+=("$pageNum $STR_SEP $pTitle") # Add formatted line to array
 	done
