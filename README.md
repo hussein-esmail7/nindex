@@ -12,6 +12,8 @@ A program to quickly find a scanned page from a given index and open it if it ex
 - [Donate](#donate)
 
 ## What is this?
+This program is used to quickly open a scanned notebook page quickly via
+Terminal.
 
 ## Requirements
 - fzf
@@ -33,6 +35,8 @@ alias n='path/to/folder/nindex/nindex.sh
 ```
 
 ## Configuration File
+The configuration path this file should be at is `$HOME/.config/nindex/config`.
+
 There are some required values to operate this program. The configuration file
 is treated as a bash program, so variables would have to be defined like in
 bash (i.e.: no spaces between the "=", etc.).
