@@ -8,6 +8,7 @@
 # TODO: Add an `-m` option that prints a list of pages that match a query, and
 # include the title of each page in that query. Essentially a grep of the cache
 # TODO: Make fzf optional
+# TODO: Warn if there are multiple entries for the same page in the index file (while scanning)
 
 # Values that are here only
 FOLDER_CONFIG="$HOME/.config/nindex"
@@ -127,16 +128,14 @@ if [ $CONFIG_SCAN -eq 1 ] ; then
 	# Iterate through each index of $files
 	# `for i in ${files[@]}` gives you by word, not by line (same as issue above)
 	for (( i=0; i<${#files[@]}; i++ )) ; do
-		# Get rid of .jpg at the end, then only keep first word for error handling
-		pageNum=${files[$i]%".jpg"}
-		# Only keep first word, in case the file name is still "N09-P123 - rescan"
-		pageNum=$(echo "$pageNum" | while read -a ar; do echo "${ar[0]}" ; done)
+		# Get rid of .jpg suffix and only keep first word before " ",
+		# in case the file name is still "N09-P123 - rescan"
+		pageNum=$(echo "${files[$i]%'.jpg'}" | cut -d " " -f1)
 		# Get the .tex entry of that page and remove the LaTeX formatting
 		pTitle=$(grep $pageNum $NOTEBOOK_INDEX | cut -d] -f2- | xargs -0)
 		if [ "${#pTitle}" -eq 0 ] ; then
 			# If there is no entry for this page, set to $STR_EMPTY
 			pTitle="$STR_EMPTY"
-			echo "$pageNum is EMPTY!"
 		fi
 		final+=("$pageNum $STR_SEP $pTitle") # Add formatted line to array
 	done
