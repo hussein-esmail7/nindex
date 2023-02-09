@@ -6,6 +6,7 @@ A program to quickly find a scanned page from a given index and open it if it ex
 - [Requirements](#requirements)
 - [Installation](#installation)
     - [Installing Through Git](#installing-through-git)
+- [Configuration File](#configuration-file)
 - [Running the Program](#running-the-program)
 - [Arguments](#arguments)
 - [Donate](#donate)
@@ -14,6 +15,7 @@ A program to quickly find a scanned page from a given index and open it if it ex
 
 ## Requirements
 - fzf
+- Some default values in your configuration file. See [Configuration File](#configuration-file).
 
 ## Installation
 At the moment, you can only `git clone` this repository, but I am hoping to put
@@ -28,6 +30,24 @@ If you want to run this program in Terminal just by typing the program name,
 you would have to add an alias in your `.bashrc` file. For example, if you want it to run when you type just `n`, you would put this line in your `.bashrc`:
 ```
 alias n='path/to/folder/notebook-index/notebook-index.sh
+```
+
+## Configuration File
+There are some required values to operate this program. The configuration file
+is treated as a bash program, so variables would have to be defined like in
+bash (i.e.: no spaces between the "=", etc.).
+
+Required variables:
+```
+NOTEBOOK_FOLDER: Path to the notebook folder
+NOTEBOOK_INDEX: Path to the .tex index file
+```
+
+Optional variables:
+```
+FILE_LIST: Path to where you want to store the cache file. Default: $HOME/.config/nindex/cache.txt
+FZF_PROMPT: Prompt for fzf. Default: "Notebook Search: "
+STR_EMPTY: What to display if a page has no title in the index. Default: "=== NO ENTRY ==="
 ```
 
 ## Running the program
