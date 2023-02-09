@@ -7,7 +7,6 @@
 
 # TODO: Add an `-m` option that prints a list of pages that match a query, and
 # include the title of each page in that query. Essentially a grep of the cache
-# TODO: Move cache file somewhere else
 # TODO: Make fzf optional
 
 # Values that are here only
@@ -199,12 +198,12 @@ if [ $RUN_FZF -eq 1 ] ; then
 			# search for page 12, page 112 would be the most recent result, so
 			# we need an explicit "012".
 			# Part 1: (grep) Query against index, returns qualifying pages
-			#		"|" character added in case that number occurs in a page
-			#		title.  Ex: "MATH 1025" for the "102" query.
+			#		"|" (STR_SEP) character added in case that number occurs in
+			#		a page title. Ex: "MATH 1025" for the "102" query.
 			# Part 2: (sort) In case notebook order is not correct (latest last)
 			# Part 3: (tail) Get the last line (the most up to date one)
 			# Part 4: (cut) Get line up to the first whitespace (ex. N10-P102)
-			P_CHOICE=$(grep "$tmp_p_num |" "$FILE_LIST" | sort | tail -n1 | cut -d " " -f1)
+			P_CHOICE=$(grep "$tmp_p_num $STR_SEP" "$FILE_LIST" | sort | tail -n1 | cut -d " " -f1)
 		else
 			# If the user gave an uncertain initial query
 			P_CHOICE=$(cat "$FILE_LIST" | fzf --tac --prompt="$FZF_PROMPT" --query "$args" | cut -d " " -f1)

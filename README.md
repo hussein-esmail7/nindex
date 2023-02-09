@@ -1,4 +1,4 @@
-# notebook-index
+# nindex
 A program to quickly find a scanned page from a given index and open it if it exists.
 
 ## Table of Contents
@@ -23,13 +23,13 @@ it on Homebrew/AUR soon.
 
 ## Installing Through Git
 ```
-git clone https://github.com/hussein-esmail7/notebook-index
-cd notebook-index
+git clone https://github.com/hussein-esmail7/nindex
+cd nindex
 ```
 If you want to run this program in Terminal just by typing the program name,
 you would have to add an alias in your `.bashrc` file. For example, if you want it to run when you type just `n`, you would put this line in your `.bashrc`:
 ```
-alias n='path/to/folder/notebook-index/notebook-index.sh
+alias n='path/to/folder/nindex/nindex.sh
 ```
 
 ## Configuration File
@@ -54,11 +54,11 @@ STR_EMPTY: What to display if a page has no title in the index. Default: "=== NO
 To use this program, you have to make sure you are in the correct directory,
 and that the file has executable permission.
 ```
-cd notebook-index
-chmod +x notebook-index.sh
+cd nindex
+chmod +x nindex.sh
 ```
 
-Personally, I assigned the file `notebook-index.sh` as an alias in my `.bashrc`
+Personally, I assigned the file `nindex.sh` as an alias in my `.bashrc`
 so whichever directory I'm in, I can just type `n <args>` and it will run the program in whatever directory I'm in.
 
 ## Arguments
