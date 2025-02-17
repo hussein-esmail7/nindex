@@ -11,9 +11,9 @@ import sys
 import subprocess
 
 # ========= VARIABLES ===========
-path_input_processor = "./nindex"
-path_input_processor = "./nindex"
-path_get_filepaths = "./ni_get_index_both"
+dir_path = os.path.dirname(os.path.realpath(__file__))
+path_input_processor = dir_path + "/nindex"
+path_get_filepaths = dir_path + "/ni_get_index_both"
 path_notebook_folder = "/Users/hussein/Documents/Notebooks"
 path_notebook_index = "/Users/hussein/Documents/Notebooks/N-Indexes.tex"
 
@@ -67,24 +67,24 @@ def main():
     userinput = userinput.decode("utf-8")[:-1].split('\n') # bytestring to list
     indexlist = indexlist.decode("utf-8")[:-1].split('\n') # bytestring to list
     paths_to_open = []
-    
+
     if substring_in_list("ERROR", userinput):
         # If a program run returns an error, pass the error to the user and exit the program
         print('\n'.join(userinput))
         sys.exit()
-    for i in userinput:
-        file_index = substring_in_list(i, indexlist)
-        if file_index != -1:
-            # print(str_prefix_info + i + " file present.")
-            # print(str_prefix_info + "Path: " + indexlist[file_index+1])
-            paths_to_open.append("\"" + indexlist[file_index+1] + "\"")
-            # Add quotation marks to the beginning and end in case the file path contains spaces
-        else:
-            # print(str_prefix_err + i + " file missing.")
-            pass
     if len(paths_to_open) > 0:
-        # openImage(' '.join(paths_to_open)) # Error when given multiple images
-        os.system("open " + ' '.join(paths_to_open))
+        for i in userinput:
+            file_index = substring_in_list(i, indexlist)
+            if file_index != -1:
+                # print(str_prefix_info + i + " file present.")
+                # print(str_prefix_info + "Path: " + indexlist[file_index+1])
+                paths_to_open.append("\"" + indexlist[file_index+1] + "\"")
+                # Add quotation marks to the beginning and end in case the file path contains spaces
+            else:
+                # print(str_prefix_err + i + " file missing.")
+                pass    
+            # openImage(' '.join(paths_to_open)) # Error when given multiple images
+            os.system("open " + ' '.join(paths_to_open))
     sys.exit()
 
 
