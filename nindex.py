@@ -62,6 +62,10 @@ def openImage(path):
     subprocess.Popen([imageViewerFromCommandLine, path])
 
 def main():
+    if "-e" in sys.argv:
+        os.system("$EDITOR " + path_notebook_index)
+        sys.exit()
+
     userinput = subprocess.check_output(f"{path_input_processor} " + ' '.join(sys.argv[1:]), shell=True)
     indexlist = subprocess.check_output(f"{path_get_filepaths} {path_notebook_folder} {path_notebook_index}", shell=True)
     userinput = userinput.decode("utf-8")[:-1].split('\n') # bytestring to list
