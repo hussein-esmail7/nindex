@@ -70,6 +70,8 @@ so whichever directory I'm in, I can just type `n <args>` and it will run the pr
 > For this section, I'm assuming you have read [How I Format My Notebooks](#how-i-format-my-notebooks).
 When running this program, you can type in the notebook number
 
+## How I Format My Notebooks
+See https://husseinesmail.xyz/notebooks
 
 ## Donate
 [!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/husseinesmail)
