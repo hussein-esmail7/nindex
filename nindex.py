@@ -72,19 +72,21 @@ def main():
         # If a program run returns an error, pass the error to the user and exit the program
         print('\n'.join(userinput))
         sys.exit()
+    
+    for i in userinput:
+        file_index = substring_in_list(i, indexlist)
+        if file_index != -1:
+            # print(str_prefix_info + i + " file present.")
+            # print(str_prefix_info + "Path: " + indexlist[file_index+1])
+            paths_to_open.append("\"" + indexlist[file_index+1] + "\"")
+            # Add quotation marks to the beginning and end in case the file path contains spaces
+        else:
+            # print(str_prefix_err + i + " file missing.")
+            pass    
+    
     if len(paths_to_open) > 0:
-        for i in userinput:
-            file_index = substring_in_list(i, indexlist)
-            if file_index != -1:
-                # print(str_prefix_info + i + " file present.")
-                # print(str_prefix_info + "Path: " + indexlist[file_index+1])
-                paths_to_open.append("\"" + indexlist[file_index+1] + "\"")
-                # Add quotation marks to the beginning and end in case the file path contains spaces
-            else:
-                # print(str_prefix_err + i + " file missing.")
-                pass    
-            # openImage(' '.join(paths_to_open)) # Error when given multiple images
-            os.system("open " + ' '.join(paths_to_open))
+        # openImage(' '.join(paths_to_open)) # Error when given multiple images
+        os.system("open " + ' '.join(paths_to_open))
     sys.exit()
 
 
